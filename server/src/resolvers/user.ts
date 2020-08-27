@@ -6,6 +6,7 @@ import {
   InputType,
   Field,
   ObjectType,
+  Query,
 } from 'type-graphql';
 import { MyContext } from 'src/types';
 import { User } from '../entities/User';
@@ -38,10 +39,21 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    // you are not logged in
+    if (!req.session.userId) {
+      return null;
+    }
+
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UsernamePasswordInput,
-    @Ctx() ctx: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     if (options.username.length <= 2) {
       return {
@@ -66,13 +78,13 @@ export class UserResolver {
     }
 
     const hashedPassword = await argon2.hash(options.password);
-    const user = ctx.em.create(User, {
+    const user = em.create(User, {
       username: options.username,
       password: hashedPassword,
     });
 
     try {
-      await ctx.em.persistAndFlush(user);
+      await em.persistAndFlush(user);
     } catch (error) {
       if (error.code === '23505') {
         return {
@@ -86,15 +98,20 @@ export class UserResolver {
       }
     }
 
+    // store user id session
+    // this will set a cookie on the user
+    // keep them logged in
+    req.session.userId = user.id;
+
     return { user };
   }
 
   @Mutation(() => UserResponse)
   async login(
     @Arg('options') options: UsernamePasswordInput,
-    @Ctx() ctx: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
-    const user = await ctx.em.findOne(User, { username: options.username });
+    const user = await em.findOne(User, { username: options.username });
     if (!user) {
       return {
         errors: [
@@ -118,6 +135,11 @@ export class UserResolver {
         ],
       };
     }
+
+    // store user id session
+    // this will set a cookie on the user
+    // keep them logged in
+    req.session.userId = user.id;
 
     return {
       user,
