@@ -1,5 +1,5 @@
-import { ThemeProvider, CSSReset, ColorModeProvider } from '@chakra-ui/core';
-import { Provider, createClient, useMutation } from 'urql';
+import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import { Provider, createClient } from 'urql';
 
 import theme from '../theme';
 
