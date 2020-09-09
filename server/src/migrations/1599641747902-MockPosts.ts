@@ -1,8 +1,9 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class MockPosts1599569521660 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`insert into post (title, text, "creatorId", "createdAt") values ('High Tension (Haute tension) (Switchblade Romance)', 'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.
+export class MockPosts1599641747902 implements MigrationInterface {
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`insert into post (title, text, "creatorId", "createdAt") values ('High Tension (Haute tension) (Switchblade Romance)', 'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.
 
         Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
         
@@ -319,7 +320,9 @@ export class MockPosts1599569521660 implements MigrationInterface {
         insert into post (title, text, "creatorId", "createdAt") values ('New Orleans Uncensored', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', 1, '2020-04-02T18:02:40Z');
         insert into post (title, text, "creatorId", "createdAt") values ('Men Without Women', 'Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.', 1, '2019-09-08T04:15:34Z');
         `);
-  }
+    }
 
-  public async down(_: QueryRunner): Promise<void> {}
+    public async down(queryRunner: QueryRunner): Promise<void> {
+    }
+
 }
