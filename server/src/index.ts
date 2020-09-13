@@ -15,6 +15,8 @@ import connectRedis from 'connect-redis';
 import cors from 'cors';
 import { createConnection } from 'typeorm';
 import path from 'path';
+import { createUserLoader } from './utils/createUserLoader';
+import { createUpdootLoader } from './utils/createUpdootLoader';
 
 const main = async () => {
   const conn = await createConnection({
@@ -29,7 +31,7 @@ const main = async () => {
   });
 
   await conn.runMigrations();
- /*  await Post.delete({}); */
+  /*  await Post.delete({}); */
 
   const app = express();
 
@@ -68,7 +70,13 @@ const main = async () => {
       validate: false,
     }),
     // accessible by all resolvers
-    context: ({ req, res }) => ({ req, res, redis }),
+    context: ({ req, res }) => ({
+      req,
+      res,
+      redis,
+      userLoader: createUserLoader(),
+      updootLoader: createUpdootLoader(),
+    }),
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
