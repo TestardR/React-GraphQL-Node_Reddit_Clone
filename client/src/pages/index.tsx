@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/core';
 import { useState } from 'react';
 import UpdootSection from '../components/UpdootSection';
+import { EditDeletePostButtons } from '../components/EditDeletePostButtons';
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -51,14 +52,12 @@ const Index = () => {
                     <Text mt={4} flex={1}>
                       {p.textSnippet}
                     </Text>
-                    <IconButton
-                      icon="delete"
-                      aria-label="delete post"
-                      variantColor="red"
-                      onClick={() => {
-                        deletePost({ id: p.id });
-                      }}
-                    />
+                    <Box ml="auto">
+                      <EditDeletePostButtons
+                        id={p.id}
+                        creatorId={p.creator.id}
+                      />
+                    </Box>
                   </Flex>
                 </Box>
               </Flex>
